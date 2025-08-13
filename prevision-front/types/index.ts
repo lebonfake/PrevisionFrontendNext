@@ -35,9 +35,19 @@ export interface FluxReadDto {
   id: number
   nom: string
   nombreEtapes: number
+  fermes : FermeReadDto[]
 }
 
 export interface PermissionPrevReadDto {
      id :number
      permissions:string
+}
+
+export interface FermeReadDto {
+  id: string
+  nom: string
+}
+export interface AffectFermeDto{
+  fermeId :string[]
+  fluxId : number
 }

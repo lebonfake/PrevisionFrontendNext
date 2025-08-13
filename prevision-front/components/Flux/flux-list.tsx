@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Search, Trash2 } from "lucide-react"
+import { Plus, Search, Trash2, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,13 +20,17 @@ import {
 import type { FluxReadDto } from "@/types"
 import { toast } from "sonner"
 import CreateFluxModal from "./create-flux-modal"
+import AffectFermeModal from "./affect-ferme-modal"
 import { FluxService } from "@/services/flux-service"
+import { Label } from "../ui/label"
 
 export default function FluxList() {
   const [flux, setFlux] = useState<FluxReadDto[]>([])
   const [filteredFlux, setFilteredFlux] = useState<FluxReadDto[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isAffectModalOpen, setIsAffectModalOpen] = useState(false)
+  const [selectedFluxForAffect, setSelectedFluxForAffect] = useState<{ id: number; nom: string } | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -43,11 +47,13 @@ export default function FluxList() {
       setLoading(true)
       // TODO: Remplacer par l'appel API réel
        const data = await FluxService.getAll()
-       setFlux(data)
+      setFlux(data)
+      console.log(data);
+      
 
       // Données de test temporaires
-    
-    
+     
+      
     } catch (error) {
       toast.error("Erreur", {
         description: "Impossible de charger les flux de validation",
@@ -76,6 +82,11 @@ export default function FluxList() {
   const handleFluxCreated = (newFlux: FluxReadDto) => {
     setFlux((prev) => [...prev, newFlux])
     setIsCreateModalOpen(false)
+  }
+
+  const handleAffectToFerme = (fluxId: number, fluxNom: string) => {
+    setSelectedFluxForAffect({ id: fluxId, nom: fluxNom })
+    setIsAffectModalOpen(true)
   }
 
   if (loading) {
@@ -118,36 +129,58 @@ export default function FluxList() {
             <Card key={fluxItem.id} className="hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-lg font-medium">{fluxItem.nom}</CardTitle>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Êtes-vous sûr de vouloir supprimer le flux "{fluxItem.nom}" ? Cette action est irréversible.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Annuler</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => handleDelete(fluxItem.id, fluxItem.nom)}
-                        className="bg-red-600 hover:bg-red-700"
-                      >
-                        Supprimer
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAffectToFerme(fluxItem.id, fluxItem.nom)}
+                    className="flex items-center gap-2"
+                  >
+                    <Building2 className="h-4 w-4" />
+                    Affecter à une ferme
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Êtes-vous sûr de vouloir supprimer le flux "{fluxItem.nom}" ? Cette action est irréversible.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDelete(fluxItem.id, fluxItem.nom)}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Supprimer
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               </CardHeader>
               <CardContent>
+                <div className="grid gap-2">
+
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">
                     {fluxItem.nombreEtapes} étape{fluxItem.nombreEtapes > 1 ? "s" : ""}
                   </Badge>
+                </div>
+                {fluxItem.fermes.length>0 && <Label className="mt-4  text-xl">Fermes affectées : </Label>}
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">
+                    {fluxItem.fermes.map(item=>(
+                        <Badge  key={item.id}>{item.nom}</Badge>
+                    ))}
+                  </Badge>
+                </div>
                 </div>
               </CardContent>
             </Card>
@@ -161,6 +194,19 @@ export default function FluxList() {
         onClose={() => setIsCreateModalOpen(false)}
         onFluxCreated={handleFluxCreated}
       />
+
+      {selectedFluxForAffect && (
+        <AffectFermeModal
+          isOpen={isAffectModalOpen}
+          onClose={() => {
+            setIsAffectModalOpen(false)
+            setSelectedFluxForAffect(null)
+          }}
+          fluxId={selectedFluxForAffect.id}
+          fluxNom={selectedFluxForAffect.nom}
+          updateCallback={loadFlux}
+        />
+      )}
     </div>
   )
 }
