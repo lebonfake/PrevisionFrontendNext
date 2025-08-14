@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import type { FermeReadDto } from "@/types"
 import { toast } from "sonner"
-import fermeService from "@/services/ferme-service"
+import fermeService from "./../../services/ferme-service"
 import type { AffectFermeDto } from "@/types"
 
 interface AffectFermeModalProps {
@@ -46,7 +46,7 @@ export default function AffectFermeModal({ isOpen, onClose, fluxId, fluxNom,upda
     try {
       setLoading(true)
       // TODO: Remplacer par l'appel API réel
-       const data = await fermeService.getAll(fluxId)
+       const data = await fermeService.getAllWithoutFlux(fluxId)
        setFermes(data)
        console.log(data);
        

@@ -1,11 +1,19 @@
 import axiosInstance from "./axios-instance"
 import type { FermeReadDto } from "@/types"
 import type { AffectFermeDto } from "@/types";
+import type { AffectFermeVesrionDto } from "@/types";
 
 class FermeService {
   // Récupérer toutes les fermes
-  async getAll(id:number): Promise<FermeReadDto[]> {
+  async getAllWithoutFlux(id:number): Promise<FermeReadDto[]> {
     const response = await axiosInstance.get(`/fermes/without-flux/${id}`)
+    console.log(response.data);
+    
+    return response.data
+  }
+
+   async getAllWithoutSystemVer(id:number): Promise<FermeReadDto[]> {
+    const response = await axiosInstance.get(`/fermes/without-system/${id}`)
     console.log(response.data);
     
     return response.data
@@ -22,6 +30,11 @@ class FermeService {
         
     }
   }
+   // Affecter un system version à des fermes
+   async affectSystemVersionToFermes(affectFermeVesrionDto:AffectFermeVesrionDto): Promise<void> {
+    // TODO: Replace with actual API call
+     await axiosInstance.post(`/fermes/affecter-fermes-systemver`,affectFermeVesrionDto)
+  }
 }
-
-export default new FermeService()
+const fermeService = new FermeService()
+export default fermeService;

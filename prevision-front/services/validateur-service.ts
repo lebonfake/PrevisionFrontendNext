@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { ValidateurCreateDto, ValidateurReadDto } from "@/types"
 import axiosInstance from "./axios-instance";
 

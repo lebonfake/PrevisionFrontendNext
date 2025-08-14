@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Users, Menu, X, GitBranch } from "lucide-react"
+import { Users, Menu, X, GitBranch ,Settings} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -16,6 +16,11 @@ const menuItems = [
     name: "Flux de validation",
     href: "/flux-validation",
     icon: GitBranch,
+  },
+   {
+    name: "SystemVersion",
+    href: "/system-version",
+    icon: Settings,
   },
 ]
 
