@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axiosInstance from "./axios-instance"
 import type { FermeReadDto } from "@/types"
 import type { AffectFermeDto } from "@/types";
@@ -34,6 +35,15 @@ class FermeService {
    async affectSystemVersionToFermes(affectFermeVesrionDto:AffectFermeVesrionDto): Promise<void> {
     // TODO: Replace with actual API call
      await axiosInstance.post(`/fermes/affecter-fermes-systemver`,affectFermeVesrionDto)
+  }
+
+
+    async getAllFermesForUser(userId:number): Promise<FermeReadDto[]> {
+    // TODO: Replace with actual API call
+     const response = await axiosInstance.get(`/fermes/getByUser/${userId}`)
+     return response.data
+
+   
   }
 }
 const fermeService = new FermeService()

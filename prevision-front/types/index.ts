@@ -85,3 +85,60 @@ export interface AffectFermeVesrionDto {
 
   SystemId: number;
 }
+export interface SecteurReadDto {
+  code: number
+  designation: string
+  superficie: number
+  codFerm: string
+}
+
+export interface CycleReadDto {
+  codeCycle: number
+  designation: string
+}
+
+export enum TypePrevisionDto {
+  Journaliere = "Journaliere",
+  Hebdo = "Hebdo",
+  SixWeeks = "SixWeeks",
+}
+
+export enum StatutPrevisionDto {
+  Valide = "Valide",
+  EnAttente = "EnAttente",
+  Annule = "Annule",
+}
+
+export interface LignePrevisionCreateDto {
+  valeur: number
+  date: string // ISO date string
+}
+
+export interface PrevisionDetailsCreateDto {
+  secteurId: number
+  cycleId: number
+  numCulture: number
+  parcelle: string
+  lignesPrevision: LignePrevisionCreateDto[]
+}
+
+export interface PrevisionCreateDto {
+  date: string // ISO date string
+  type: TypePrevisionDto
+  fermeId: string
+  creeParUserId: number
+  statut: StatutPrevisionDto
+  details: PrevisionDetailsCreateDto[]
+  versionId: number
+  fluxId: number
+}
+
+export type TypePrevision = "journaliere" | "hebdomadaire" | "six_weeks"
+
+export interface PrevisionFormData {
+  fermeId: string | null
+  cycleId: number | null
+  typePrevision: TypePrevision | null
+  semaine?: number
+  versionId?: number
+}

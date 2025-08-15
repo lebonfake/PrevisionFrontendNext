@@ -13,6 +13,17 @@ export class SystemVersionService {
     return []
   }
 
+  static async getSystemVersionsByFarmId(farmId:string|null): Promise<SystemVersionReadDto> {
+    // TODO: Replace with actual API call
+   
+    if(farmId){
+     const response = await axiosInstance.get(`/systemVersion/get-by-farmId/${farmId}`);
+     return response.data;
+}
+    // Mock data for now
+    return {id : 0 , name:"pas de version trouver ",versionReadDtos :[]}
+  }
+
   // Create a new system version
   static async createSystemVersion(systemVersionData: SystemVersionCreateDto): Promise<SystemVersionReadDto> {
     // TODO: Replace with actual API call
