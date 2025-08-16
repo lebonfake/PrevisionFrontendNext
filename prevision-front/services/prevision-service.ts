@@ -1,10 +1,11 @@
 import  axiosInstance  from "./axios-instance"
-import type { PrevisionCreateDto } from "@/types"
+import type { PrevisionCreateDto, PrevisionReadDto } from "@/types"
 
 export class PrevisionService {
-  static async createPrevision(prevision: PrevisionCreateDto): Promise<void> {
+  static async createPrevision(prevision: PrevisionCreateDto): Promise<PrevisionReadDto> {
     try {
-      await axiosInstance.post("/api/previsions", prevision)
+      const res = await axiosInstance.post("/previsions", prevision)
+      return res.data
     } catch (error) {
       console.error("Erreur lors de la création de la prévision:", error)
       throw error

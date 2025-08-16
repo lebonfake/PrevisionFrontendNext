@@ -187,16 +187,16 @@ export default function PrevisionForm() {
     setGridValues((prev) => ({ ...prev, [key]: numValue }))
   }
 
-  const mapTypePrevisionToDto = (type: TypePrevision): TypePrevisionDto => {
+  const mapTypePrevisionToDto = (type: TypePrevision): number => {
     switch (type) {
       case "journaliere":
-        return "Journaliere" as TypePrevisionDto.Journaliere
+        return 0
       case "hebdomadaire":
-        return "Hebdo" as TypePrevisionDto.Hebdo
+        return 1
       case "six_weeks":
-        return "SixWeeks" as TypePrevisionDto.SixWeeks
+        return 2
       default:
-        return "Journaliere" as TypePrevisionDto.Journaliere
+        return 0
     }
   }
 
@@ -208,6 +208,8 @@ export default function PrevisionForm() {
 
     try {
       setLoading(true)
+      console.log(" tried");
+      
 
       const details: PrevisionDetailsCreateDto[] = secteurs.map((secteur) => {
         const lignesPrevision: LignePrevisionCreateDto[] = gridDates.map((date, dateIndex) => {
@@ -222,8 +224,6 @@ export default function PrevisionForm() {
         return {
           secteurId: secteur.code,
           cycleId: formData.cycleId!,
-          numCulture: 1,
-          parcelle: secteur.designation,
           lignesPrevision,
         }
       })
@@ -232,14 +232,16 @@ export default function PrevisionForm() {
         date: new Date().toISOString().split("T")[0],
         type: mapTypePrevisionToDto(formData.typePrevision),
         fermeId: formData.fermeId.toString(),
-        creeParUserId: 1,
-        statut: "EnAttente" as StatutPrevisionDto,
+       
         details,
         versionId: formData.versionId || 0,
-        fluxId: 0,
       }
 
-      await PrevisionService.createPrevision(previsionData)
+      console.log(previsionData);
+      
+      const response = await PrevisionService.createPrevision(previsionData)
+      console.log(response);
+      
 
       toast.success("Prévision sauvegardée avec succès")
 
@@ -317,7 +319,7 @@ export default function PrevisionForm() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="ferme">Ferme</Label>
-            <Select onValueChange={handleFermeChange} disabled={loading}>
+            <Select value={formData.fermeId?.toString() || ""} onValueChange={handleFermeChange} disabled={loading}>
               <SelectTrigger>
                 <SelectValue placeholder="Sélectionner une ferme" />
               </SelectTrigger>

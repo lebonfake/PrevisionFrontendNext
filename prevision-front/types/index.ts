@@ -117,20 +117,15 @@ export interface LignePrevisionCreateDto {
 export interface PrevisionDetailsCreateDto {
   secteurId: number
   cycleId: number
-  numCulture: number
-  parcelle: string
   lignesPrevision: LignePrevisionCreateDto[]
 }
 
 export interface PrevisionCreateDto {
   date: string // ISO date string
-  type: TypePrevisionDto
+  type: number
   fermeId: string
-  creeParUserId: number
-  statut: StatutPrevisionDto
   details: PrevisionDetailsCreateDto[]
   versionId: number
-  fluxId: number
 }
 
 export type TypePrevision = "journaliere" | "hebdomadaire" | "six_weeks"
@@ -141,4 +136,41 @@ export interface PrevisionFormData {
   typePrevision: TypePrevision | null
   semaine?: number
   versionId?: number
+}
+
+
+// DTO for reading LignePrevision (response)
+export interface LignePrevisionReadDto {
+  id: number;
+  valeur: number;
+  date: string; // Use string for DateTime from C#
+}
+
+// DTO for reading PrevisionDetails (response)
+export interface PrevisionDetailsReadDto {
+  id: number;
+  secteurId: number;
+  secteurDesignation: string;
+  cycleId: number;
+  cycleDesignation: string;
+  numCulture: number;
+  parcelle: string;
+  lignesPrevision: LignePrevisionReadDto[];
+}
+
+// Main DTO for reading a Prevision (response)
+export interface PrevisionReadDto {
+  id: number;
+  date: string; // Use string for DateTime from C#
+  type: string;
+  fermeId: string;
+  fermeNom: string;
+  creeParUserId: number;
+  creeParUserName: string;
+  statut: string;
+  details: PrevisionDetailsReadDto[];
+  versionId: number;
+  versionName: string;
+  fluxId: number | null;
+  fluxNom: string | null;
 }
