@@ -174,3 +174,28 @@ export interface PrevisionReadDto {
   fluxId: number | null;
   fluxNom: string | null;
 }
+
+
+// DTO for reading a Prevision card (response)
+export interface PrevisionCardReadDto {
+  id: number;
+  date: string;
+  type: string;
+  fermeId: string;
+  fermeNom: string;
+  creeParUserId: number;
+  creeParUserName: string;
+  statut: string;
+  versionId: number | null;
+  versionName: string | null;
+  fluxId: number | null;
+  fluxNom: string | null;
+  totale: number;
+}
+
+// DTO for validating a Prevision step
+export interface ValidatePrevisionRequestDto {
+  prevId: number;
+  lignePrev: Record<number, number>;
+}
+
