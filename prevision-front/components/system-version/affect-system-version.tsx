@@ -100,7 +100,7 @@ export default function AffectSystemVersionModal({
   const availableFermes = fermes.filter((ferme) => !selectedFermes.find((selected) => selected.id === ferme.id))
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose} modal={false}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Affecter à des fermes</DialogTitle>

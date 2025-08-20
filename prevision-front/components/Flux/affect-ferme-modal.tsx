@@ -63,6 +63,8 @@ export default function AffectFermeModal({ isOpen, onClose, fluxId, fluxNom,upda
   }
 
   const handleFermeSelect = (ferme: FermeReadDto) => {
+    console.log(ferme);
+    
     setSelectedFermes((prev) => {
       const isAlreadySelected = prev.some((f) => f.id === ferme.id)
       if (isAlreadySelected) {
@@ -112,7 +114,7 @@ export default function AffectFermeModal({ isOpen, onClose, fluxId, fluxNom,upda
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose} modal={false}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Affecter à une ferme</DialogTitle>

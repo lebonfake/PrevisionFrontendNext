@@ -229,7 +229,7 @@ export default function CreateFluxModal({ isOpen, onClose, onFluxCreated }: Crea
         })),
       }
 
-      // TODO: Remplacer par l'appel API réel
+     
       console.log(fluxData);
       
      const createdFlux = await FluxService.create(fluxData)
@@ -241,6 +241,8 @@ export default function CreateFluxModal({ isOpen, onClose, onFluxCreated }: Crea
         description: "Flux créé avec succès",
       })
     } catch (error) {
+      console.log(error);
+        
       toast.error("Erreur", {
         description: "Impossible de créer le flux",
       })

@@ -139,7 +139,7 @@ export default function FluxList() {
                     <Building2 className="h-4 w-4" />
                     Affecter à une ferme
                   </Button>
-                  <AlertDialog>
+                  {/*<AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
                         <Trash2 className="h-4 w-4" />
@@ -162,7 +162,7 @@ export default function FluxList() {
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
-                  </AlertDialog>
+                  </AlertDialog>*/}
                 </div>
               </CardHeader>
               <CardContent>

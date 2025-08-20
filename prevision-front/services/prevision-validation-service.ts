@@ -61,7 +61,7 @@ export class PrevisionValidationService {
   // Annuler une prévision
   static async cancelPrevision(id: number): Promise<void> {
     try {
-       await axiosInstance.patch(`/previsions/annuler/${id}`);
+       await axiosInstance.patch(`/etapesPrev/annuler/${id}`);
       console.log(`Prévision ${id} annulée`)
     } catch (error) {
       console.error("Erreur lors de l'annulation:", error)
