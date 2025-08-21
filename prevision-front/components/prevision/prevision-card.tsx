@@ -2,8 +2,9 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
 import type { PrevisionCardReadDto } from "@/types"
-import { Calendar, MapPin, Clock } from "lucide-react"
+import { Calendar, MapPin, Clock, TrendingUp } from "lucide-react"
 
 interface PrevisionCardProps {
   prevision: PrevisionCardReadDto
@@ -32,6 +33,9 @@ const formatDate = (dateString: string) => {
 }
 
 export default function PrevisionCard({ prevision, onClick }: PrevisionCardProps) {
+  const progressPercentage =
+    prevision.totaleEtape > 0 ? Math.round((prevision.ordreCurrentEtape / prevision.totaleEtape) * 100) : 0
+
   return (
     <Card
       className="cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all duration-300 border-0 shadow-md bg-white"
@@ -76,6 +80,24 @@ export default function PrevisionCard({ prevision, onClick }: PrevisionCardProps
             <div>
               <div className="text-sm font-medium text-gray-900">{prevision.creeParUserName}</div>
               <div className="text-xs text-gray-500">Créé par</div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 text-gray-600">
+            <div className="p-2 bg-purple-50 rounded-full">
+              <TrendingUp className="h-4 w-4 text-purple-600" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-1">
+                <div className="text-sm font-medium text-gray-900">Progression des étapes</div>
+                <div className="text-xs text-gray-500">
+                  {prevision.ordreCurrentEtape}/{prevision.totaleEtape}
+                </div>
+              </div>
+              <Progress value={progressPercentage} className="h-2 bg-gray-200" />
+              {prevision.etapeNom && (
+                <div className="text-xs text-gray-500 mt-1">Étape actuelle: {prevision.etapeNom}</div>
+              )}
             </div>
           </div>
         </div>

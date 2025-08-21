@@ -173,6 +173,7 @@ export interface PrevisionReadDto {
   versionName: string;
   fluxId: number | null;
   fluxNom: string | null;
+  totale : number | null
 }
 
 
@@ -191,6 +192,9 @@ export interface PrevisionCardReadDto {
   fluxId: number | null;
   fluxNom: string | null;
   totale: number;
+  etapeNom: string | null;
+  totaleEtape : number;
+  ordreCurrentEtape: number
 }
 
 // DTO for validating a Prevision step
@@ -199,3 +203,68 @@ export interface ValidatePrevisionRequestDto {
   lignePrev: Record<number, number>;
 }
 
+export interface PrevisionGeneralReadDto {
+
+ prev: PrevisionReadDto;
+
+ etapes: EtapePrevReadDto[];
+
+}
+
+
+
+
+
+export interface EtapePrevReadDto {
+
+id: number;
+
+name: string;
+
+ordre: number;
+
+validateurPermissionModifications: ValidateurPermissionModifications[];
+
+}
+
+
+
+export interface ValidateurPermissionModifications {
+
+validateur: string;
+
+premissions: string[];
+
+secteurModifications: SecteurModifications[];
+
+}
+
+
+
+export interface SecteurModifications {
+
+ prevDetailId: number;
+
+ secteurName: string;
+
+ modificationsDtos: ModificationsDto[];
+
+}
+
+
+
+export interface ModificationsDto {
+
+ id: number;
+
+ lignePrevisionId: number;
+
+ dateLigne: string; // Use string for DateTime objects
+
+ oldValue: number;
+
+ newValue: number;
+
+ dateModification: string; // Use string for DateTime objects
+
+}
