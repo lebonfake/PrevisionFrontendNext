@@ -1,5 +1,5 @@
 import  axiosInstance  from "./axios-instance"
-import type { PermissionPrevReadDto } from "@/types"
+import type { PermissionPrevReadDto,  } from "@/types"
 
 export class PermissionService {
   private static readonly BASE_URL = "/permissionprev"
@@ -15,4 +15,6 @@ export class PermissionService {
     const response = await axiosInstance.get<PermissionPrevReadDto>(`${this.BASE_URL}/${id}`)
     return response.data
   }
+
+ 
 }

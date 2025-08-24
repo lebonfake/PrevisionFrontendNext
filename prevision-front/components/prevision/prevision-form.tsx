@@ -24,7 +24,7 @@ import type {
   LignePrevisionCreateDto,
   StatutPrevisionDto,
 } from "@/types"
-import { getCurrentDate, getWeeksInYear, getWeekDates, formatDate, getNext6WeeksSundays } from "@/utils/date-helper"
+import { getCurrentDate, getWeeksInYear, getWeekDates, formatDate, getNext6WeeksSundays ,getWeeksRangeBasedOnDay} from "@/utils/date-helper"
 import { toast } from "sonner"
 
 export default function PrevisionForm() {
@@ -51,7 +51,7 @@ export default function PrevisionForm() {
 
   useEffect(() => {
     const currentYear = new Date().getFullYear()
-    const yearWeeks = getWeeksInYear(currentYear)
+    const yearWeeks = getWeeksRangeBasedOnDay()
     setWeeks(yearWeeks)
   }, [])
 
@@ -128,10 +128,7 @@ export default function PrevisionForm() {
     const weekNumber = Number.parseInt(semaine)
     setFormData((prev) => ({ ...prev, semaine: weekNumber, versionId: undefined }))
     setGridDates([])
-   if(formData.versionId)
-   {
-    handleVersionChange(formData.versionId.toString())
-   }
+    setGridValues({}) // Clear grid values when week changes
   }
 
   const handleVersionChange = (versionId: string) => {
@@ -143,16 +140,11 @@ export default function PrevisionForm() {
       if (version) {
         const versionData = version
         const currentYear = new Date().getFullYear()
-        console.log(formData.semaine);
+        console.log("Semaine sélectionnée:", formData.semaine);
         
         const weekDates = getWeekDates(currentYear, formData.semaine)
-        console.log(weekDates);
-        
-        console.log(versionData);
-        
-
         const filteredDates = weekDates.slice(versionData.startDay, versionData.endDay + 1)
-        console.log(filteredDates);
+        console.log("Dates filtrées:", filteredDates);
         
         setGridDates(filteredDates)
       }
@@ -208,9 +200,7 @@ export default function PrevisionForm() {
 
     try {
       setLoading(true)
-      console.log(" tried");
       
-
       const details: PrevisionDetailsCreateDto[] = secteurs.map((secteur) => {
         const lignesPrevision: LignePrevisionCreateDto[] = gridDates.map((date, dateIndex) => {
           const key = `${secteur.code}-${dateIndex}`
@@ -232,16 +222,12 @@ export default function PrevisionForm() {
         date: new Date().toISOString().split("T")[0],
         type: mapTypePrevisionToDto(formData.typePrevision),
         fermeId: formData.fermeId.toString(),
-       
         details,
         versionId: formData.versionId || 0,
       }
 
-      console.log(previsionData);
-      
       const response = await PrevisionService.createPrevision(previsionData)
       console.log(response);
-      
 
       toast.success("Prévision sauvegardée avec succès")
 
@@ -336,7 +322,7 @@ export default function PrevisionForm() {
           {formData.fermeId && (
             <div className="space-y-2">
               <Label htmlFor="cycle">Cycle</Label>
-              <Select onValueChange={handleCycleChange} disabled={loading}>
+              <Select value={formData.cycleId?.toString() || ""} onValueChange={handleCycleChange} disabled={loading}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner un cycle" />
                 </SelectTrigger>
@@ -354,7 +340,7 @@ export default function PrevisionForm() {
           {formData.cycleId && (
             <div className="space-y-2">
               <Label htmlFor="typePrevision">Type de Prévision</Label>
-              <Select onValueChange={(value) => handleTypePrevisionChange(value as TypePrevision)}>
+              <Select value={formData.typePrevision || ""} onValueChange={(value) => handleTypePrevisionChange(value as TypePrevision)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner le type" />
                 </SelectTrigger>
@@ -370,7 +356,7 @@ export default function PrevisionForm() {
           {formData.typePrevision === "hebdomadaire" && (
             <div className="space-y-2">
               <Label htmlFor="semaine">Semaine de l&apos;année</Label>
-              <Select onValueChange={handleSemaineChange}>
+              <Select value={formData.semaine?.toString() || ""} onValueChange={handleSemaineChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner une semaine" />
                 </SelectTrigger>
@@ -388,12 +374,12 @@ export default function PrevisionForm() {
           {formData.typePrevision === "hebdomadaire" && formData.semaine && (
             <div className="space-y-2">
               <Label htmlFor="version">Version</Label>
-              <Select onValueChange={handleVersionChange} disabled={loading}>
+              <Select value={formData.versionId?.toString() || ""} onValueChange={handleVersionChange} disabled={loading}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner une version" />
                 </SelectTrigger>
                 <SelectContent>
-                  {versions.versionReadDtos.map((version) => (
+                  {versions.versionReadDtos && versions.versionReadDtos.map((version) => (
                     <SelectItem key={version.id} value={version.id?.toString() || ""}>
                       {version.name}
                     </SelectItem>

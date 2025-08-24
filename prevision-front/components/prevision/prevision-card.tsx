@@ -23,6 +23,16 @@ const getTypeBadgeVariant = (type: string) => {
       return "bg-gray-100 text-gray-800 hover:bg-gray-200"
   }
 }
+const getStatutBadgeVariant = (statut: string) => {
+  switch (statut.toLowerCase()) {
+    case "valide":
+      return "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
+    case "annule":
+      return "bg-red-100 text-white-800 hover:bg-white-200"
+    default:
+      return "bg-gray-100 text-gray-800 hover:bg-gray-200"
+  }
+}
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString("fr-FR", {
@@ -46,7 +56,7 @@ export default function PrevisionCard({ prevision, onClick }: PrevisionCardProps
           <div>
             <CardTitle className="text-xl font-bold text-gray-900 mb-1">{prevision.fermeNom}</CardTitle>
             <div className="flex items-center gap-2">
-              <Badge className={`${getTypeBadgeVariant(prevision.type)} border-0 font-medium`}>{prevision.type}</Badge>
+              <Badge className={`${getTypeBadgeVariant(prevision.type)} border-0 font-medium`}>{prevision.type} {prevision.versionName? "  version :  "+prevision.versionName : " "}</Badge>
               {prevision.type.toLowerCase() === "hebdomadaire" && prevision.versionName && (
                 <Badge variant="outline" className="text-xs bg-white/80">
                   {prevision.versionName}
@@ -104,7 +114,7 @@ export default function PrevisionCard({ prevision, onClick }: PrevisionCardProps
 
         <div className="pt-3 border-t border-gray-100">
           <div className="flex items-center justify-between">
-            <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
+            <Badge variant="outline" className={`${getStatutBadgeVariant(prevision.statut.replace("_"," "))}`}>
               <Clock className="h-3 w-3 mr-1" />
               {prevision.statut.replace("_", " ")}
             </Badge>

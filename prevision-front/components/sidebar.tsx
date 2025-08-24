@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Users, Menu, X, GitBranch ,Settings,Calendar,CheckCircle, Archive} from "lucide-react"
+import { Users, Menu, X, GitBranch ,Settings,Calendar,CheckCircle, Archive,Clock,Eye} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -36,6 +36,16 @@ const menuItems = [
     name: "Historique des prévisions",
     href: "/historique-previsions",
     icon: Archive,
+  },
+  {
+    name: "État des prévisions",
+    href: "/etat-previsions",
+    icon: Clock,
+  },
+  {
+    name: "Prévision reçu",
+    href: "/prevision-recu",
+    icon: Eye,
   },
 ]
 

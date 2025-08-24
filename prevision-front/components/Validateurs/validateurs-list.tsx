@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { useState, useEffect } from "react"
@@ -144,19 +145,17 @@ export default function ValidateursList() {
                   <span>
                     {validateur.firstName} {validateur.lastName}
                   </span>
-                  <Button
+                  {/*<Button
                     variant="ghost"
                     size="icon"
                     onClick={() => handleDeleteClick(validateur)}
                     className="text-red-500 hover:text-red-700 hover:bg-red-50"
                   >
                     <Trash2 className="h-4 w-4" />
-                  </Button>
+                  </Button>*/}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="text-sm text-gray-600">ID: {validateur.id}</div>
-              </CardContent>
+            
             </Card>
           ))}
         </div>
@@ -169,7 +168,7 @@ export default function ValidateursList() {
         onValidateurCreated={handleValidateurCreated}
       />
 
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+      {/*<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
@@ -191,6 +190,6 @@ export default function ValidateursList() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+*/}    </div>
   )
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { ValidateurCreateDto, ValidateurReadDto } from "@/types"
+import type { ValidateurCreateDto, ValidateurReadDto , ValidateurPermissionResponse} from "@/types"
 import axiosInstance from "./axios-instance";
 
 class ValidateurService {
@@ -35,6 +35,20 @@ class ValidateurService {
     // });
     // return response.data;
     return []
+  }
+
+   async getValidateurPermissionsPrev(etapePrevId : number) : Promise<ValidateurPermissionResponse>{
+    
+    try{
+      const response =  await axiosInstance.get<ValidateurPermissionResponse>(`${this.baseUrl}/permissions/${etapePrevId}`)
+      console.log("service : ",response);
+      
+    return response.data
+    }
+    catch(err)
+    {
+      throw err
+    }
   }
 }
 

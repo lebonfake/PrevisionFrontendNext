@@ -173,7 +173,10 @@ export interface PrevisionReadDto {
   versionName: string;
   fluxId: number | null;
   fluxNom: string | null;
-  totale : number | null
+  totale : number | null;
+  totaleEtape : number;
+  ordreCurrentEtape:number;
+  etapePrevId:number;
 }
 
 
@@ -267,4 +270,18 @@ export interface ModificationsDto {
 
  dateModification: string; // Use string for DateTime objects
 
+}
+
+
+  export enum  PermissionType
+  {
+      Modifier = "Modifier",
+      Valider = "Valider",
+      Annuler = "Annuler"
+  }
+
+  export interface ValidateurPermissionResponse
+{
+    
+    permissions : PermissionType[]
 }

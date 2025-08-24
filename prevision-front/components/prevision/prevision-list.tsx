@@ -40,15 +40,9 @@ export default function PrevisionListShared({
   const loadData = async () => {
     try {
       setLoading(true)
-      const filters = showFilters
-        ? {
-            search: searchTerm,
-            type: typeFilter !== "all" ? typeFilter : undefined,
-            statut: statutFilter !== "all" ? statutFilter : undefined,
-          }
-        : undefined
+   
 
-      const data = await fetchData(filters)
+      const data = await fetchData()
       setPrevisions(data)
     } catch (error) {
       console.error("Erreur lors du chargement des données:", error)
@@ -59,7 +53,7 @@ export default function PrevisionListShared({
 
   useEffect(() => {
     loadData()
-  }, [searchTerm, typeFilter, statutFilter])
+  }, [])
 
   useEffect(() => {
     if (autoRefresh) {

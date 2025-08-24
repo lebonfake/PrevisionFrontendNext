@@ -153,7 +153,7 @@ export default function SystemVersionList() {
                       <Building2 className="h-4 w-4" />
                       Affecter à une ferme
                     </Button>
-                    <AlertDialog>
+                    {/*<AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 bg-transparent">
                           <Trash2 className="h-4 w-4" />
@@ -177,7 +177,7 @@ export default function SystemVersionList() {
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
-                    </AlertDialog>
+                    </AlertDialog>*/}
                   </div>
                 </div>
               </CardHeader>

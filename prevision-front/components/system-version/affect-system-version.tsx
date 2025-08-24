@@ -1,27 +1,43 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Badge } from "@/components/ui/badge"
-import { Check, ChevronsUpDown, X } from "lucide-react"
-import { cn } from "@/lib/utils"
-import type { AffectFermeVesrionDto, FermeReadDto } from "@/types"
-import  fermeService  from "./../../services/ferme-service"
-import { SystemVersionService } from "./../../services/system-version-service"
-import { toast } from "sonner"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
+import { Check, ChevronsUpDown, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { AffectFermeVesrionDto, FermeReadDto } from "@/types";
+import fermeService from "./../../services/ferme-service";
+import { SystemVersionService } from "./../../services/system-version-service";
+import { toast } from "sonner";
 
 interface AffectSystemVersionModalProps {
-  isOpen: boolean
-  onClose: () => void
-  systemVersionId: number
-  onSuccess: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  systemVersionId: number;
+  onSuccess: () => void;
 }
 
 export default function AffectSystemVersionModal({
@@ -30,74 +46,81 @@ export default function AffectSystemVersionModal({
   systemVersionId,
   onSuccess,
 }: AffectSystemVersionModalProps) {
-  const [fermes, setFermes] = useState<FermeReadDto[]>([])
-  const [selectedFermes, setSelectedFermes] = useState<FermeReadDto[]>([])
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [loadingFermes, setLoadingFermes] = useState(true)
+  const [fermes, setFermes] = useState<FermeReadDto[]>([]);
+  const [selectedFermes, setSelectedFermes] = useState<FermeReadDto[]>([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingFermes, setLoadingFermes] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
-      loadFermes()
+      loadFermes();
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   const loadFermes = async () => {
     try {
-      setLoadingFermes(true)
-      const data = await fermeService.getAllWithoutSystemVer(systemVersionId)
-      setFermes(data)
+      setLoadingFermes(true);
+      const data = await fermeService.getAllWithoutSystemVer(systemVersionId);
+      setFermes(data);
     } catch (error) {
       toast.error("Erreur", {
         description: "Impossible de charger les fermes",
-      })
+      });
     } finally {
-      setLoadingFermes(false)
+      setLoadingFermes(false);
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (selectedFermes.length === 0) {
       toast.error("Erreur", {
         description: "Veuillez sélectionner au moins une ferme",
-      })
-      return
+      });
+      return;
     }
 
     try {
-      setLoading(true)
-      const fermeIds = selectedFermes.map((ferme) => ferme.id)
-      const affectRequest : AffectFermeVesrionDto = {SystemId: systemVersionId, FermeId: fermeIds}
-      await fermeService.affectSystemVersionToFermes(affectRequest)
-      onSuccess()
+      setLoading(true);
+      const fermeIds = selectedFermes.map((ferme) => ferme.id);
+      const affectRequest: AffectFermeVesrionDto = {
+        SystemId: systemVersionId,
+        FermeId: fermeIds,
+      };
+      await fermeService.affectSystemVersionToFermes(affectRequest);
+      onSuccess();
     } catch (error) {
       toast.error("Erreur", {
         description: "Impossible d'affecter le system version aux fermes",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSelectFerme = (ferme: FermeReadDto) => {
     if (!selectedFermes.find((f) => f.id === ferme.id)) {
-      setSelectedFermes([...selectedFermes, ferme])
+      setSelectedFermes([...selectedFermes, ferme]);
     }
-    setOpen(false)
-  }
+    //setOpen(false)
+  };
 
   const handleRemoveFerme = (fermeId: string) => {
-    setSelectedFermes(selectedFermes.filter((f) => f.id !== fermeId))
-  }
+    console.log("executed");
+
+    setSelectedFermes(selectedFermes.filter((f) => f.id !== fermeId));
+  };
 
   const handleClose = () => {
-    setSelectedFermes([])
-    onClose()
-  }
+    setSelectedFermes([]);
+    onClose();
+  };
 
-  const availableFermes = fermes.filter((ferme) => !selectedFermes.find((selected) => selected.id === ferme.id))
+  const availableFermes = fermes.filter(
+    (ferme) => !selectedFermes.find((selected) => selected.id === ferme.id)
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose} modal={false}>
@@ -114,12 +137,24 @@ export default function AffectSystemVersionModal({
             {selectedFermes.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {selectedFermes.map((ferme) => (
-                  <Badge key={ferme.id} variant="secondary" className="flex items-center gap-1">
-                    {ferme.nom}
-                    <X
-                      className="h-3 w-3 cursor-pointer hover:text-red-600"
-                      onClick={() => handleRemoveFerme(ferme.id)}
-                    />
+                  <Badge
+                    key={ferme.id}
+                    variant="secondary"
+                    className="flex items-center gap-2 pr-1 cursor-default bg-gray-100 hover:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-sm font-medium">{ferme.nom}</span>
+
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-5 h-5 rounded-full hover:bg-red-100 hover:text-red-600 transition-all duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveFerme(ferme.id);
+                      }}
+                      aria-label={`Remove ${ferme.nom}`}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </Badge>
                 ))}
               </div>
@@ -135,7 +170,9 @@ export default function AffectSystemVersionModal({
                   className="w-full justify-between bg-transparent"
                   disabled={loadingFermes}
                 >
-                  {loadingFermes ? "Chargement..." : "Sélectionner une ferme..."}
+                  {loadingFermes
+                    ? "Chargement..."
+                    : "Sélectionner une ferme..."}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
@@ -146,8 +183,11 @@ export default function AffectSystemVersionModal({
                     <CommandEmpty>Aucune ferme trouvée.</CommandEmpty>
                     <CommandGroup>
                       {availableFermes.map((ferme) => (
-                        <CommandItem key={ferme.id} value={ferme.nom} onSelect={() => handleSelectFerme(ferme)}>
-                          <Check className={cn("mr-2 h-4 w-4", "opacity-0")} />
+                        <CommandItem
+                          key={ferme.id}
+                          value={ferme.nom}
+                          onSelect={() => handleSelectFerme(ferme)}
+                        >
                           {ferme.nom}
                         </CommandItem>
                       ))}
@@ -163,12 +203,15 @@ export default function AffectSystemVersionModal({
             <Button type="button" variant="outline" onClick={handleClose}>
               Annuler
             </Button>
-            <Button type="submit" disabled={loading || selectedFermes.length === 0}>
+            <Button
+              type="submit"
+              disabled={loading || selectedFermes.length === 0}
+            >
               {loading ? "Affectation..." : "Affecter"}
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

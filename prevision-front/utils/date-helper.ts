@@ -37,6 +37,8 @@ export function getWeeksInYear(year: number): number[] {
 }
 
 export function getWeekDates(year: number, weekNumber: number): Date[] {
+  console.log(" year : ",year," weeknumber : ",weekNumber);
+  
   const firstDay = new Date(year, 0, 1)
 
   // Trouver le premier dimanche de l'année
@@ -85,4 +87,41 @@ export function getNext6WeeksSundays(): Date[] {
   }
 
   return sundays
+}
+
+export function getWeeksRangeBasedOnDay(): number[] {
+  const now = new Date()
+  const dayOfWeek = now.getDay() // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const year = now.getFullYear()
+
+  // Find the current week number using your logic
+  const allWeeks = getWeeksInYear(year)
+  let currentWeekNumber: number | undefined
+
+  for (const week of allWeeks) {
+    const datesInWeek = getWeekDates(year, week)
+    if (datesInWeek.some((date) => date.toDateString() === now.toDateString())) {
+      currentWeekNumber = week
+      break
+    }
+  }
+
+  // If the current week is not found (e.g., at the year boundary),
+  // we default to the first week of the year.
+  if (currentWeekNumber === undefined) {
+    currentWeekNumber = getWeeksInYear(now.getFullYear())[0]
+  }
+
+  const nextWeekNumber = currentWeekNumber + 1
+
+  // Thursday is day 4.
+  // If today is Thursday (4) or before (Sunday=0 to Wednesday=3),
+  // return both the current and next week.
+  if (dayOfWeek <= 4) {
+    return [currentWeekNumber, nextWeekNumber]
+  } else {
+    // If today is Friday (5) or Saturday (6),
+    // return only the next week.
+    return [nextWeekNumber]
+  }
 }

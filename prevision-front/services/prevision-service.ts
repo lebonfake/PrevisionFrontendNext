@@ -22,6 +22,26 @@ export class PrevisionService {
       throw err
     }
   }
+  static async getEtatPrevisions() : Promise<PrevisionCardReadDto[]>{
+
+    try{
+      const res  = await axiosInstance.get("/previsions/prevision-etat")
+      return res.data
+    }catch(err){
+      console.log(err);
+      throw err
+    }
+  }
+  static async getRecuPrevisions() : Promise<PrevisionCardReadDto[]>{
+
+    try{
+      const res  = await axiosInstance.get("/previsions/prevision-recu")
+      return res.data
+    }catch(err){
+      console.log(err);
+      throw err
+    }
+  }
 
   static async getHistoriquePrevisionDetail(previsionId : number) : Promise<PrevisionGeneralReadDto>{
 

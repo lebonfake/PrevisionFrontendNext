@@ -30,6 +30,7 @@ export default function PrevisionValidationPage() {
     try {
       setLoading(true)
       const data = await PrevisionValidationService.getPrevisionsPendingValidation()
+   
       setPrevisions(data)
     } catch (error) {
       toast.error("Erreur lors du chargement des prévisions")
