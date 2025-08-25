@@ -285,3 +285,14 @@ export interface ModificationsDto {
     
     permissions : PermissionType[]
 }
+
+
+
+export interface TagCreateDto {
+  tag: string
+}
+
+export interface TagReadDto {
+  id: number
+  tag: string
+}

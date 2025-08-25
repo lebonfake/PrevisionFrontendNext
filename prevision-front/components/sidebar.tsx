@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Users, Menu, X, GitBranch ,Settings,Calendar,CheckCircle, Archive,Clock,Eye} from "lucide-react"
+import { Users, Menu, X, GitBranch ,Settings,Calendar,CheckCircle, Archive,Clock,Eye,Tag} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -21,6 +21,11 @@ const menuItems = [
     name: "SystemVersion",
     href: "/system-version",
     icon: Settings,
+  },
+   {
+    name: "Tags",
+    href: "/tags",
+    icon: Tag,
   },
   {
     name: "Créer un prévision",
