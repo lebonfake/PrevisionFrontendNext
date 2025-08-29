@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, act } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,18 +19,23 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ArrowLeft, Check, X, Edit } from "lucide-react";
-import type { PrevisionReadDto, ValidatePrevisionRequestDto } from "@/types";
+import type { ActionCreateDto, CancelPrevisionRequestDto, PrevisionReadDto, TagReadDto, ValidatePrevisionRequestDto } from "@/types";
 import { PrevisionValidationService } from "@/services/prevision-validation-service";
 import { toast } from "sonner";
 import { PermissionType } from "@/types";
 import { permission } from "process";
 import validateurService from "@/services/validateur-service";
+import { TagService } from "@/services/tag-service";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function PrevisionValidationDetailPage() {
   const [prevision, setPrevision] = useState<PrevisionReadDto | null>(null);
   const [editingValues, setEditingValues] = useState<Record<number, number>>(
     {}
   );
+  const [tags,setTags] = useState<TagReadDto[]>([])
+  const [action,setAction] = useState<ActionCreateDto>({remarque : "", tagsIds : []})
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const params = useParams();
@@ -42,8 +47,25 @@ export default function PrevisionValidationDetailPage() {
 
   useEffect(() => {
     loadPrevision();
+    loadTags();
   }, [id]);
 
+  const loadTags=async ()=>{
+    try{
+      setLoading(true)
+      const response = await TagService.getAllTags()
+      if(response){
+        setTags(response)
+      }
+    }
+    catch(err){
+      setLoading(false)
+    console.log(err);
+
+    }finally{
+      setLoading(false);
+    }
+  }
   const loadPrevision = async () => {
     try {
       setLoading(true);
@@ -96,13 +118,33 @@ export default function PrevisionValidationDetailPage() {
       [ligneId]: numValue,
     }));
   };
+  const handleValidateTagToggle = (id: number) => {
+    setAction(prev => {
+        // Check if the ID already exists in the tagsIds array
+        const isSelected = prev.tagsIds.includes(id);
 
+        let updatedTagsIds;
+        if (isSelected) {
+            // If the ID is already there, remove it
+            updatedTagsIds = prev.tagsIds.filter(tagId => tagId !== id);
+        } else {
+            // If the ID is not there, add it
+            updatedTagsIds = [...prev.tagsIds, id];
+        }
+
+        // Return the new state
+        return { ...prev, tagsIds: updatedTagsIds };
+    });
+};
+
+  const actionCreate : ActionCreateDto = {remarque : "", tagsIds : [1,2]}
   const handleValidate = async () => {
     try {
       // Sauvegarder les modifications
       const validateRequest: ValidatePrevisionRequestDto = {
         prevId: id,
         lignePrev: editingValues,
+        action : action
       };
 
       await PrevisionValidationService.validatePrevision(validateRequest);
@@ -119,7 +161,9 @@ export default function PrevisionValidationDetailPage() {
 
   const handleCancel = async () => {
     try {
-      await PrevisionValidationService.cancelPrevision(id);
+    
+    const  cancelRequest : CancelPrevisionRequestDto  = {prevId : id , action : action}
+      await PrevisionValidationService.cancelPrevision(cancelRequest);
       toast.success("Prévision annulée");
       router.push("/prevision-validation");
     } catch (error) {
@@ -215,6 +259,37 @@ export default function PrevisionValidationDetailPage() {
                         action est irréversible.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="validate-remarque">Remarque</label>
+                        <Textarea
+                          id="validate-remarque"
+                          placeholder="Ajoutez une remarque (optionnel)..."
+                          value={action.remarque}
+                          onChange={(e) => setAction(prev=>{
+                            return {...prev, remarque:e.target.value}
+                          })}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <label>Raisons</label>
+                        <div className="mt-2 space-y-2 max-h-32 overflow-y-auto">
+                          {tags.map((tag) => (
+                            <div key={tag.id} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={`validate-tag-${tag.id}`}
+                                checked={action.tagsIds.includes(tag.id)}
+                                onCheckedChange={() => handleValidateTagToggle(tag.id)}
+                              />
+                              <label htmlFor={`validate-tag-${tag.id}`} className="text-sm">
+                                {tag.tag}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Retour</AlertDialogCancel>
                       <AlertDialogAction
@@ -246,6 +321,37 @@ export default function PrevisionValidationDetailPage() {
                         les modifications apportées ?
                       </AlertDialogDescription>
                     </AlertDialogHeader>
+                     <div className="space-y-4">
+                      <div>
+                        <label htmlFor="validate-remarque">Remarque</label>
+                        <Textarea
+                          id="validate-remarque"
+                          placeholder="Ajoutez une remarque (optionnel)..."
+                          value={action.remarque}
+                          onChange={(e) => setAction(prev=>{
+                            return {...prev, remarque:e.target.value}
+                          })}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <label>Raisons</label>
+                        <div className="mt-2 space-y-2 max-h-32 overflow-y-auto">
+                          {tags.map((tag) => (
+                            <div key={tag.id} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={`validate-tag-${tag.id}`}
+                                checked={action.tagsIds.includes(tag.id)}
+                                onCheckedChange={() => handleValidateTagToggle(tag.id)}
+                              />
+                              <label htmlFor={`validate-tag-${tag.id}`} className="text-sm">
+                                {tag.tag}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Retour</AlertDialogCancel>
                       <AlertDialogAction

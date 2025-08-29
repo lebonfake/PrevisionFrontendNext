@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { MapPin, ArrowLeft, User, Clock } from "lucide-react";
+import { MapPin, ArrowLeft, User, Clock, CheckCircle, XCircle, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TypePrevisionDto, type PrevisionGeneralReadDto } from "@/types";
 import Link from "next/link";
@@ -106,6 +106,31 @@ export default function PrevisionDetailShared({
     const sum = (prevision.details || []).flatMap(p=>(p?.lignesPrevision.find(l=>l.date == date))?.valeur)?.reduce((curr, acc) => curr + acc, 0);
     return sum?  Math.round(sum   * 100) / 100 : 0 ;
   }
+
+  const getActionStatusIcon = (typeAction: string) => {
+    return typeAction === "Validation" ? (
+      <CheckCircle className="h-4 w-4 text-green-600" />
+    ) : (
+      <XCircle className="h-4 w-4 text-red-600" />
+    );
+  };
+
+  const getActionStatusText = (typeAction: string) => {
+    return typeAction === "Validation" ? "Validée" : "Annulée";
+  };
+
+  const getActionStatusBadge = (typeAction: string) => {
+    return typeAction === "Validation" ? (
+      <Badge className="bg-green-100 text-green-800 border-green-200">
+        Validée
+      </Badge>
+    ) : (
+      <Badge className="bg-red-100 text-red-800 border-red-200">
+        Annulée
+      </Badge>
+    );
+  };
+
   let totaleSum = 0
   return (
     <div className="space-y-6">
@@ -270,13 +295,16 @@ export default function PrevisionDetailShared({
                 <div className="space-y-3">
                   {(etape.validateurPermissionModifications || []).map(
                     (validateur: any, index: number) => (
-                      <div key={index} className="bg-gray-50 rounded p-3">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="font-medium">
+                      <div key={index} className="bg-gray-50 rounded p-4">
+                        <div className="flex justify-between items-center mb-3">
+                          <span className="font-medium flex items-center gap-2">
+                            <User className="h-4 w-4" />
                             Validateur: {validateur.validateur}
                           </span>
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <span className="text-sm text-gray-600">Permissions:</span>
                           {(validateur.premissions || []).map(
                             (permission: string, permIndex: number) => (
                               <Badge
@@ -289,6 +317,56 @@ export default function PrevisionDetailShared({
                             )
                           )}
                         </div>
+
+                        {/* Actions section */}
+                        {(validateur.actions || []).length > 0 && (
+                          <div className="mt-4">
+                            <h5 className="font-medium text-sm mb-3 flex items-center gap-2">
+                              <MessageSquare className="h-4 w-4" />
+                              Actions effectuées
+                            </h5>
+                            <div className="space-y-3">
+                              {validateur.actions.map((action: any) => (
+                                <div key={action.id} className="bg-white rounded-lg p-3 border">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                      {getActionStatusIcon(action.typeAction)}
+                                      <span className="font-medium text-sm">
+                                        {getActionStatusText(action.typeAction)}
+                                      </span>
+                                      {getActionStatusBadge(action.typeAction)}
+                                    </div>
+                                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                                      <Clock className="h-3 w-3" />
+                                      {new Date(action.dateAction).toLocaleDateString("fr-FR")} à{" "}
+                                      {new Date(action.dateAction).toLocaleTimeString("fr-FR")}
+                                    </span>
+                                  </div>
+                                  
+                                  {action.remarque && (
+                                    <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                                      <span className="font-medium text-gray-700">Remarque:</span>
+                                      <p className="mt-1 text-gray-600">{action.remarque}</p>
+                                    </div>
+                                  )}
+
+                                  {(action.tags || []).length > 0 && (
+                                    <div className="mt-2">
+                                      <span className="text-xs text-gray-600">Tags:</span>
+                                      <div className="flex flex-wrap gap-1 mt-1">
+                                        {action.tags.map((tag: any) => (
+                                          <Badge key={tag.id} variant="secondary" className="text-xs">
+                                            {tag.tag}
+                                          </Badge>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )
                   )}

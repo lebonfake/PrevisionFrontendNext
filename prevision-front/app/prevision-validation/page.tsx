@@ -90,10 +90,7 @@ export default function PrevisionValidationPage() {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline" className="flex items-center gap-2 bg-transparent">
-              <Filter className="h-4 w-4" />
-              Filtres avancés
-            </Button>
+           
           </div>
         </div>
 

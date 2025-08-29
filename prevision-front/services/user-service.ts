@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { UserReadDto } from "@/types"
+import type { UserReadDto } from "@/types";
 import axiosInstance from "./axios-instance";
 class UserService {
-  private readonly baseUrl = "/users"
+  private readonly baseUrl = "/users";
 
   // Récupérer tous les utilisateurs
   async getAllUsers(): Promise<UserReadDto[]> {
     // TODO: Implémenter l'appel API
-     const response = await axiosInstance.get<UserReadDto[]>(this.baseUrl);
-     return response.data;
-    return []
+    const response = await axiosInstance.get<UserReadDto[]>(this.baseUrl);
+    return response.data;
+    return [];
   }
 
   // Récupérer un utilisateur par ID
@@ -18,7 +18,7 @@ class UserService {
     // TODO: Implémenter l'appel API
     // const response = await axiosInstance.get<UserReadDto>(`${this.baseUrl}/${id}`);
     // return response.data;
-    return {} as UserReadDto
+    return {} as UserReadDto;
   }
 
   // Rechercher des utilisateurs
@@ -28,8 +28,18 @@ class UserService {
     //   params: { searchTerm }
     // });
     // return response.data;
-    return []
+    return [];
+  }
+  async getNotValidateur(): Promise<UserReadDto[]> {
+    try {
+      const response = await axiosInstance.get<UserReadDto[]>(
+        `${this.baseUrl}/not-val`
+      );
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
   }
 }
 
-export default new UserService()
+export default new UserService;

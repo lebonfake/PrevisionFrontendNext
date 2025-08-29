@@ -7,6 +7,7 @@ export interface ValidateurReadDto {
   id: number;
   firstName: string;
   lastName: string;
+  isActive : boolean;
 }
 
 export interface UserReadDto {
@@ -204,6 +205,17 @@ export interface PrevisionCardReadDto {
 export interface ValidatePrevisionRequestDto {
   prevId: number;
   lignePrev: Record<number, number>;
+  action : ActionCreateDto
+}
+
+export interface CancelPrevisionRequestDto{
+  prevId: number ;
+  action : ActionCreateDto;
+}
+
+export interface ActionCreateDto{
+   remarque : string,
+   tagsIds : number[]
 }
 
 export interface PrevisionGeneralReadDto {
@@ -234,12 +246,19 @@ validateurPermissionModifications: ValidateurPermissionModifications[];
 
 export interface ValidateurPermissionModifications {
 
-validateur: string;
+  validateur: string;
+  premissions: string[];
+  Actions : ActionReadDtoForPrevDetails[];
+  secteurModifications: SecteurModifications[];
 
-premissions: string[];
+}
 
-secteurModifications: SecteurModifications[];
-
+export interface ActionReadDtoForPrevDetails{
+  id : number ;
+  typeAction : string ;
+  remarque : string;
+  dateAction : string;
+  tags : TagReadDto[];
 }
 
 
@@ -273,12 +292,12 @@ export interface ModificationsDto {
 }
 
 
-  export enum  PermissionType
-  {
-      Modifier = "Modifier",
-      Valider = "Valider",
-      Annuler = "Annuler"
-  }
+export enum  PermissionType
+{
+    Modifier = "Modifier",
+    Valider = "Valider",
+    Annuler = "Annuler"
+}
 
   export interface ValidateurPermissionResponse
 {

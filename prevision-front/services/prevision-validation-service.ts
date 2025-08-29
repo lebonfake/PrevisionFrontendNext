@@ -1,4 +1,4 @@
-import type { PrevisionCardReadDto, PrevisionReadDto, ValidatePrevisionRequestDto } from "@/types"
+import type { CancelPrevisionRequestDto, PrevisionCardReadDto, PrevisionReadDto, ValidatePrevisionRequestDto } from "@/types"
 import axiosInstance from "./axios-instance";
 
 export class PrevisionValidationService {
@@ -59,10 +59,10 @@ export class PrevisionValidationService {
   }
 
   // Annuler une prévision
-  static async cancelPrevision(id: number): Promise<void> {
+  static async cancelPrevision(req : CancelPrevisionRequestDto): Promise<void> {
     try {
-       await axiosInstance.patch(`/etapesPrev/annuler/${id}`);
-      console.log(`Prévision ${id} annulée`)
+       await axiosInstance.patch(`/etapesPrev/annuler`,req);
+      
     } catch (error) {
       console.error("Erreur lors de l'annulation:", error)
       throw error

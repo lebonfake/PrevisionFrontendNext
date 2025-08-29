@@ -50,6 +50,17 @@ class ValidateurService {
       throw err
     }
   }
+  async toggleValidateur(validateurId : number) {
+      try{
+          const response =  await axiosInstance.get(`${this.baseUrl}/toggle/${validateurId}`)
+          return response
+
+      }
+      catch(err)
+      {
+        throw err
+      }
+  }
 }
 
 export default new ValidateurService()
