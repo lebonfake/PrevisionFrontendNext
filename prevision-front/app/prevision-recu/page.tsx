@@ -6,7 +6,7 @@ import { PrevisionService } from "@/services/prevision-service"
 export default function PrevisionRecu() {
   return (
     <PrevisionListShared
-      title="Prévision validées reçu les trois dérniers jours"
+      title="Prévision validées reçu"
       description="Prévisions récemment validées en attente de votre consultation"
       basePath="/prevision-recu"
       fetchData={PrevisionService.getRecuPrevisions}

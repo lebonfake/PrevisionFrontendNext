@@ -14,4 +14,17 @@ export class SecteurService {
       throw error
     }
   }
+
+   static async getSecteursByFermeAndCycle(fermeId: string,cycleId : number): Promise<SecteurReadDto[]> {
+    try {
+      // TODO: Remplacer par l'appel API réel
+       const response = await axiosInstance.get(`secteurs/get-by-farmId/${fermeId}/cycleId/${cycleId}`);
+      return response.data;
+
+      
+    } catch (error) {
+      console.error("Erreur lors du chargement des secteurs:", error)
+      throw error
+    }
+  }
 }
