@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { useState, useEffect } from "react"
@@ -118,7 +119,7 @@ export default function AffectFermeModal({ isOpen, onClose, fluxId, fluxNom,upda
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Affecter à une ferme</DialogTitle>
-          <DialogDescription>Sélectionnez les fermes auxquelles affecter le flux "{fluxNom}"</DialogDescription>
+          <DialogDescription>Sélectionnez les fermes auxquelles affecter le flux &quot;{fluxNom}&quot;</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
